@@ -1,21 +1,31 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute} from 'vue-router'
 import { useStore } from 'vuex'
 const store = useStore()
+const route = useRoute()
 const showMenu = ref(false)
 const toggleNavbar = () => {
   showMenu.value = !showMenu.value
 }
 const isAuthenticated = computed(() => store.getters['auth/getUserIsAuthenticated'])
 const isAdmin = computed(() => store.getters['auth/getUserIsAdmin'])
+const messages = computed(() => {
+  return store.getters["auth/getMessages"];
+});
+const errors = computed(() => {
+  return store.getters["auth/getErrors"];
+});
+
+const currentRoute = computed(() => route.name)
+
 const logout = () => {
   store.dispatch('auth/logout')
   localStorage.clear()
 }
 </script>
 <template>
-  <nav class="relative flex flex-wrap items-center justify-between px-2 py-3 bg-blue-500 mb-3">
+  <nav class="relative flex flex-wrap items-center justify-between px-2 py-3 bg-blue-500" v-if="currentRoute !== 'Admin'">
     <div class="container px-4 mx-auto flex flex-wrap items-center justify-between">
       <div
         v-if="isAuthenticated"
@@ -105,4 +115,30 @@ const logout = () => {
       </div>
     </div>
   </nav>
+  <div v-if="messages" class="absolute top-12 left-1/2 z-20 -translate-x-1/2 text-center">
+    <div
+      class="p-2 bg-green-200 items-center text-bg-green-200 leading-none lg:rounded-full flex lg:inline-flex"
+      role="alert"
+    >
+      <span
+        class="flex rounded-full bg-green-500 uppercase px-2 py-1 text-xs font-bold mr-3"
+        >Bravo</span
+      >
+      <span class="font-semibold mr-2 text-left flex-auto">{{ messages }}</span>
+    </div>
+  </div>
+  <div v-if="errors.msg" class="absolute top-12 left-1/2 z-20 -translate-x-1/2 text-center">
+    <div
+      class="p-2 bg-red-200 items-center text-bg-red-200 leading-none lg:rounded-full flex lg:inline-flex"
+      role="alert"
+    >
+      <span
+        class="flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs font-bold mr-3"
+        >Erreur</span
+      >
+      <span class="font-semibold mr-2 text-left flex-auto">{{
+        errors.msg
+      }}</span>
+    </div>
+  </div>
 </template>

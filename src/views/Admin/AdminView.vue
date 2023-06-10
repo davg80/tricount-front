@@ -1,4 +1,5 @@
 <script setup>
+import SidebarComponent from '../../components/sidebarComponent.vue'
 import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 const store = useStore()
@@ -14,14 +15,12 @@ onMounted(() => {
 
 <template>
   <div>
-    
-    <p v-if="users.length === 0">Aucun utilisateurs de rôle user</p>
-    <div v-else>
-      Utilisateurs : {{ users }}
-    </div>
-    <p v-if="attendees.length === 0">Aucun participants</p>
-    <div v-else>
-      Participants :{{ attendees }}
+    <SidebarComponent />
+    <div class="relative md:ml-64 bg-blueGray-100">
+      <p v-if="users.length === 0">Aucun utilisateurs de rôle user</p>
+      <div v-else>Utilisateurs : {{ users }}</div>
+      <p v-if="attendees.length === 0">Aucun participants</p>
+      <div v-else>Participants :{{ attendees }}</div>
     </div>
   </div>
 </template>
