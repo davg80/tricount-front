@@ -15,5 +15,11 @@ export default {
           context.commit('setErrorsForm', error.response.data);
         }
       })
+    },
+    updateUser(context, user) {
+      console.log(user)
+    },
+    deleteUser(context, user) {
+      console.log(user)
     }
   }

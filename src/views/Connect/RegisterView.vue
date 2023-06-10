@@ -21,8 +21,8 @@ const handleSubmit = () => {
   const gender = male.value ? 'male' : 'female'
   console.log(firstname.value, lastname.value, email.value, password.value, gender)
   store.dispatch('auth/register', {
-    firstname: email.value,
-    lastname: password.value,
+    firstname: firstname.value,
+    lastname: lastname.value,
     gender: gender,
     email: email.value,
     password: password.value

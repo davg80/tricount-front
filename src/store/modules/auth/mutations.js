@@ -21,5 +21,9 @@ export default {
       },
       setIsAdmin(state, role) {
         state.userIsAdmin = role === 'admin'
+      },
+      setViewAdmin(state, newView) {
+        console.log(newView);
+        state.viewAdmin = newView
       }
 }

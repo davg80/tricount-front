@@ -10,7 +10,8 @@ export default {
       userIsAdmin: false,
       logger: null,
       errorsForm: [],
-      messages: null
+      messages: null,
+      viewAdmin: 'users'
     }
   },
   getters,
