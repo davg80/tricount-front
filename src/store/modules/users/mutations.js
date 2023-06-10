@@ -19,9 +19,7 @@ export default {
   },
   updatedUser(state, updatedUser) {
     const oldUsers = state.users
-    console.log(oldUsers);
     const indexUser = oldUsers.findIndex((user) => user._id === updatedUser._id)
-    console.log(indexUser);
     state.users.splice(indexUser, 1, updatedUser)
   },
   deleteUser(state, deletedUser) {

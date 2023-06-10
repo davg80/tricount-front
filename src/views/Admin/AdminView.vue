@@ -9,9 +9,30 @@ const view = computed(() => store.getters['auth/getViewAdmin'])
 
 const editAction = ref(false)
 const userFields = ref({ firstname: null, lastname: null, email: null })
+const attendeeFields = ref({ firstname: null, lastname: null, status: null })
 
 const editUser = () => {
   editAction.value = true
+}
+const editAttendee = () => {
+  editAction.value = true
+}
+
+const updatedAttende = (oldAttendee) => {
+  console.log(attendeeFields)
+  const attendee = {
+    firstname: attendeeFields.value.firstname ?? oldAttendee.firstname,
+    lastname: attendeeFields.value.lastname?? oldAttendee.lastname,
+    status: (attendeeFields.value.status === 'true' ? true : false) ?? oldAttendee.status,
+    _id: oldAttendee._id
+  }
+  console.log(attendee)
+  store.dispatch('updateAttendee', attendee)
+  editAction.value = false
+}
+
+const deleteAttendee = (user) => {
+  store.dispatch('deleteAttendee', user)
 }
 
 const updatedUser = (oldUser) => {
@@ -19,7 +40,7 @@ const updatedUser = (oldUser) => {
   const user = {
     firstname: userFields.value.firstname ?? oldUser.firstname,
     lastname: userFields.value.lastname?? oldUser.lastname,
-    email: userFields.value.email?? oldUser.email,
+    email: userFields.value.email ?? oldUser.email,
     _id: oldUser._id
   }
   console.log(user)
@@ -135,7 +156,7 @@ onMounted(() => {
               >
                 <div class="flex flex-wrap w-14 justify-between items-center">
                   <div class="my-4">
-                    <button @click="editUser(user)">
+                    <button @click="editUser()">
                       <i class="fa-solid fa-pen" style="color: #1685da; font-size: 18px"></i>
                     </button>
                   </div>
@@ -173,6 +194,11 @@ onMounted(() => {
               <th
                 class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
               >
+                valider
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
                 actions
               </th>
             </tr>
@@ -182,27 +208,56 @@ onMounted(() => {
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
               >
-                {{ attendee.lastname }}
+                <input
+                  v-if="editAction"
+                  class="px-1 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-16"
+                  :value="attendee.lastname"
+                  @change="attendeeFields.lastname = $event.target.value"
+                />
+                <span v-else>{{ attendee.lastname }}</span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
               >
-                {{ attendee.firstname }}
+                <input
+                  v-if="editAction"
+                  class="px-2 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-22"
+                  :value="attendee.firstname"
+                  @change="attendeeFields.firstname = $event.target.value"
+                />
+                <span v-else>{{ attendee.firstname }}</span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
               >
-                {{ attendee.status }}
+                <input
+                  v-if="editAction"
+                  class="px-2 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-22"
+                  :value="attendee.status"
+                  @change="attendeeFields.status = $event.target.value"
+                />
+                <span v-else>{{ attendee.status }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <button @click="updatedAttende(attendee)">
+                  <i class="fa-regular fa-circle-check" style="color: #0b8920; font-size: 20px"></i>
+                </button>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
               >
                 <div class="flex flex-wrap w-14 justify-between items-center">
                   <div class="my-4">
-                    <button><i class="fa-solid fa-pen" style="color: #1685da"></i></button>
+                    <button @click="editAttendee()">
+                      <i class="fa-solid fa-pen" style="color: #1685da; font-size: 18px"></i>
+                    </button>
                   </div>
                   <div class="my-4">
-                    <button><i class="fa-solid fa-trash" style="color: #f00505"></i></button>
+                    <button @click="deleteAttendee(attendee)">
+                      <i class="fa-solid fa-trash" style="color: #f00505; font-size: 18px"></i>
+                    </button>
                   </div>
                 </div>
               </td>

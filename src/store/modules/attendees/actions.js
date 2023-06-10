@@ -1,6 +1,6 @@
 const BASE_URL = 'http://localhost:3333/api/v1'
 import axios from 'axios'
-import router from '../../../router';
+import router from '../../../router'
 
 export default {
   fetchAttendees(context) {
@@ -25,7 +25,7 @@ export default {
       .then((response) => {
         context.commit('addNewAttendee', response.data.attendee)
         context.commit('setMessages', response.data.msg)
-        router.push({name: 'Home'})
+        router.push({ name: 'Home' })
       })
       .catch((error) => {
         if (error.response.data) {
@@ -33,10 +33,41 @@ export default {
         }
       })
   },
-  updateAttendee(context, payload) {
-      console.log(payload);
+  updateAttendee(context, updatedAttendee) {
+    console.log(updatedAttendee)
+    const attendee = context.state.attendees.find(
+      (attendee) => attendee._id === updatedAttendee._id
+    )
+    console.log(attendee)
+
+    axios
+      .patch(`${BASE_URL}/attendees/${updatedAttendee._id}`, updatedAttendee)
+      .then((response) => {
+        console.log('updated Attendee')
+        console.log(response.data)
+        context.commit('updatedAttendee', updatedAttendee)
+        context.commit('setMessages', response.data.msg)
+      })
+      .catch((error) => {
+        console.log(error);
+        // if (error.response.data) {
+        //   context.commit('setErrorsForm', error.response.data)
+        // }
+      })
   },
-  deleteAttendee(context, id) {
-      console.log(id);
-  },
+  deleteAttendee(context, deleteAttendee) {
+    console.log(deleteAttendee)
+    axios
+      .delete(`${BASE_URL}/attendees/${deleteAttendee._id}`, deleteAttendee)
+      .then((response) => {
+        console.log('delete Attendee')
+        context.commit('deleteAttendee', deleteAttendee)
+        context.commit('setMessages', response.data.msg)
+      })
+      .catch((error) => {
+        if (error.response.data) {
+          context.commit('setErrorsForm', error.response.data)
+        }
+      })
+  }
 }
