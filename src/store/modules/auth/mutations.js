@@ -7,6 +7,7 @@ export default {
         }, 3000)
       },
       setLogger(state, logger) {
+        console.log(logger);
         state.logger = logger
         if (state.logger !== null) {
           state.userIsLogged = true

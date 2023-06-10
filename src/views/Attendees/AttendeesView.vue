@@ -1,16 +1,27 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import InputComponent from '../../components/InputComponent.vue'
+
+const store = useStore()
 
 const firstname = ref('')
 const lastname = ref('')
 const status = ref(false)
+const getLogger = computed(() => store.getters['auth/getLogger'])
+const userId = ref(getLogger.value._id)
 
 const assignFirstname = (value) => (firstname.value = value)
 const assignLastname = (value) => (lastname.value = value)
 
 const handleSubmit = () => {
   console.log(firstname.value, lastname.value, status.value)
+  store.dispatch('createAttendee', {
+    firstname: firstname.value,
+    lastname: lastname.value,
+    status: status.value,
+    user: userId.value
+  })
 }
 </script>
 

@@ -22,6 +22,7 @@ export default {
       },
       register(context, user) {
         console.log('register')
+        console.log(user);
         axios
         .post(`${BASE_URL}/auth/register`, user)
         .then((response) => {

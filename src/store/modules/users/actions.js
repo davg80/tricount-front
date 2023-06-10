@@ -1,12 +1,12 @@
 const BASE_URL = 'http://localhost:3333/api/v1'
 import axios from 'axios'
 export default {
-    fetchUsers(context, user) {
-      console.log('User')
+    fetchUsers(context) {
       axios
-      .get(`${BASE_URL}/users`, user)
+      .get(`${BASE_URL}/users`)
       .then((response) => {
-        console.log(response)
+        console.log('GET Users')
+        console.log(response.data)
         context.commit('setUsers', response.data.user)
         context.commit('setMessages', response.data.msg)
       })

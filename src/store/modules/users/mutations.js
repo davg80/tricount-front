@@ -1,5 +1,6 @@
 export default {
   setUsers(state, users) {
+    console.log("MUTATIONS")
     console.log(users)
     state.users = users
   },

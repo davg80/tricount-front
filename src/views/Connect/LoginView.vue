@@ -12,7 +12,6 @@ const assignEmail = (value) => email.value = value
 const assignPassword = (value) => password.value = value
 
 const handleSubmit = () => {
-  console.log(email.value, password.value)
   try {
     store.dispatch('auth/login', {
       email: email.value,

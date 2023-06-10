@@ -71,6 +71,14 @@ const logout = () => {
               >Admin</RouterLink
             >
           </li>
+          <li class="nav-item">
+            <RouterLink
+              v-if="isAuthenticated"
+              :to="{ name: 'Profile' }"
+              class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+              >Profile</RouterLink
+            >
+          </li>
           <span v-if="!isAuthenticated" class="flex">
             <li class="nav-item">
               <RouterLink
