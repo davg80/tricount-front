@@ -16,5 +16,15 @@ export default {
     setTimeout(() => {
       state.errorsForm = ''
     }, 3000)
+  },
+  updatedUser(state, updatedUser) {
+    const oldUsers = state.users
+    console.log(oldUsers);
+    const indexUser = oldUsers.findIndex((user) => user._id === updatedUser._id)
+    console.log(indexUser);
+    state.users.splice(indexUser, 1, updatedUser)
+  },
+  deleteUser(state, deletedUser) {
+    state.users.splice(state.users.indexOf(deletedUser), 1)
   }
 }
