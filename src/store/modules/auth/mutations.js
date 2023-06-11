@@ -1,9 +1,8 @@
 export default {
     setErrorsForm(state, error) {
         state.errorsForm = error
-        state.errors = true
         setTimeout(() => {
-          state.errorsForm = ''
+          state.errorsForm = null
         }, 3000)
       },
       setLogger(state, logger) {

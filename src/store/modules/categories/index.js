@@ -5,11 +5,7 @@ import getters from "./getters.js";
 export default {
   state() {
     return {
-      errorsForm: [],
-      messages: null, 
-      categories: [],
-      mottos: [],
-      count: 0
+      categories: []
     }
   },
   getters,

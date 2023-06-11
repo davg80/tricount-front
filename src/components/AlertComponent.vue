@@ -5,32 +5,45 @@ import { useStore } from 'vuex'
 const store = useStore()
 
 const messagesAuth = computed(() => {
-  return store.getters['auth/getMessages']
+  const messages = store.getters['auth/getMessages'];
+  return messages
 })
 console.log(messagesAuth);
 const errorsAuth = computed(() => {
-  return store.getters['auth/getErrors']
+  const errors = store.getters['auth/getErrors']
+  return errors
 })
 console.log(errorsAuth);
-const messagesUser = computed(() => {
-  return store.getters.getMessagesUser
-})
-console.log(messagesUser);
-const errorsUser = computed(() => {
-  return store.getters.getErrorsUser
-})
-console.log(errorsUser);
-const messagesAttendees = computed(() => {
-  return store.getters.getMessagesAttendees
-})
-console.log(messagesAttendees);
-const errorsAttendees = computed(() => {
-  return store.getters.getErrorsAttendees
-})
-console.log(errorsAttendees);
 </script>
 
 <template>
+  <!-- <div v-if="messagesAuth !== null">{{ messagesAuth.msg }}</div>
+  <div v-if="errorsAuth !== null">{{ errorsAuth.msg }}</div> -->
+  <div v-if="messagesAuth !== null" class="absolute left-1/2 -translate-x-1/2 top-12 z-20 text-center">
+    <div
+      class="p-2 bg-green-200 items-center text-bg-green-200 leading-none lg:rounded-full flex lg:inline-flex"
+      role="alert"
+    >
+      <span class="flex rounded-full bg-green-500 uppercase px-2 py-1 text-xs font-bold mr-3"
+        >Bravo</span
+      >
+      <span class="font-semibold mr-2 text-left flex-auto">{{ messagesAuth }}</span>
+    </div>
+  </div>
+  <div v-if="errorsAuth !== null" class="absolute left-1/2 -translate-x-1/2 top-12 z-20 text-center">
+    <div
+      class="p-2 bg-red-200 items-center text-bg-red-200 leading-none lg:rounded-full flex lg:inline-flex"
+      role="alert"
+    >
+      <span class="flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs font-bold mr-3"
+        >Erreur</span
+      >
+      <span class="font-semibold mr-2 text-left flex-auto">{{ errorsAuth.msg }}</span>
+    </div>
+  </div>
+</template>
+
+<!-- <template>
   <div v-if="messagesAuth" class="absolute left-1/2 -translate-x-1/2 top-12 z-20 text-center">
     <div
       class="p-2 bg-green-200 items-center text-bg-green-200 leading-none lg:rounded-full flex lg:inline-flex"
@@ -97,4 +110,4 @@ console.log(errorsAttendees);
       <span class="font-semibold mr-2 text-left flex-auto">{{ errorsAttendees.msg }}</span>
     </div>
   </div>
-</template>
+</template> -->

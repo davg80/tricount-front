@@ -6,11 +6,40 @@ import { useStore } from 'vuex'
 const store = useStore()
 const users = computed(() => store.getters.getUsers)
 const attendees = computed(() => store.getters.getAttendees)
+const categories = computed(() => store.getters.getCategories)
 const view = computed(() => store.getters['auth/getViewAdmin'])
 
 const editAction = ref(false)
 const userFields = ref({ firstname: null, lastname: null, email: null })
 const attendeeFields = ref({ firstname: null, lastname: null, status: null })
+const categorieFields = ref({
+  name: null,
+  description: null,
+  motto: null,
+  priceTotal: null,
+  payor: null
+})
+
+// USERS
+const editUser = () => {
+  editAction.value = true
+}
+const updatedUser = (oldUser) => {
+  console.log(userFields)
+  const user = {
+    firstname: userFields.value.firstname ?? oldUser.firstname,
+    lastname: userFields.value.lastname ?? oldUser.lastname,
+    email: userFields.value.email ?? oldUser.email,
+    _id: oldUser._id
+  }
+  console.log(user)
+  store.dispatch('updateUser', user)
+  editAction.value = false
+}
+
+const deleteUser = (user) => {
+  store.dispatch('deleteUser', user)
+}
 
 // ATTENDEES
 const editAttendee = () => {
@@ -34,32 +63,34 @@ const deleteAttendee = (user) => {
   store.dispatch('deleteAttendee', user)
 }
 
-
-// USERS
-const editUser = () => {
+// CATEGORIE
+const editCategorie = () => {
   editAction.value = true
 }
-const updatedUser = (oldUser) => {
-  console.log(userFields)
-  const user = {
-    firstname: userFields.value.firstname ?? oldUser.firstname,
-    lastname: userFields.value.lastname ?? oldUser.lastname,
-    email: userFields.value.email ?? oldUser.email,
-    _id: oldUser._id
+
+const updatedCategorie = (oldCategorie) => {
+  console.log(oldCategorie)
+  const categorie = {
+    name: categorieFields.value.name ?? oldCategorie.name,
+    description: categorieFields.value.description ?? oldCategorie.description,
+    motto: categorieFields.value.motto ?? oldCategorie.motto,
+    priceTotal: categorieFields.value.priceTotal ?? oldCategorie.priceTotal,
+    payor: categorieFields.value.payor ?? oldCategorie.payor,
   }
-  console.log(user)
-  store.dispatch('updateUser', user)
+  store.dispatch('updateCategorie', categorie)
   editAction.value = false
 }
 
-const deleteUser = (user) => {
-  store.dispatch('deleteUser', user)
+const deleteCategorie = (categorie) => {
+  console.log(categorie)
+  store.dispatch('deleteCategorie', categorie)
 }
 
 onMounted(() => {
   store.dispatch('fetchUsers')
   store.dispatch('fetchAttendees')
   store.dispatch('auth/newViewAdmin')
+  store.dispatch('fetchCategories')
 })
 </script>
 
@@ -68,13 +99,12 @@ onMounted(() => {
     <SidebarComponent />
     <AlertComponent />
     <div class="relative md:ml-64 bg-blueGray-100 w-max">
-      <section class="block w-full overflow-x-auto m-14">
-      </section>
+      <!-- Users -->
       <section
         class="block w-full overflow-x-auto m-14"
         v-if="view === 'users' || view === undefined"
       >
-        <p v-if="users.length === 0">Aucun utilisateurs de rôle user</p>
+        <p v-if="users.length === 0">Aucun utilisateurs avec le rôle user</p>
         <table v-else class="items-center w-full bg-transparent border-collapse">
           <thead>
             <tr>
@@ -177,6 +207,7 @@ onMounted(() => {
           </tbody>
         </table>
       </section>
+      <!-- Attendees -->
       <section class="block w-full overflow-x-auto m-14" v-if="view === 'attendees'">
         <p v-if="attendees.length === 0">Aucun participants</p>
         <table v-else class="items-center w-full bg-transparent border-collapse">
@@ -262,6 +293,128 @@ onMounted(() => {
                   </div>
                   <div class="my-4">
                     <button @click="deleteAttendee(attendee)">
+                      <i class="fa-solid fa-trash" style="color: #f00505; font-size: 18px"></i>
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <!-- Categories -->
+      <section class="block w-full overflow-x-auto m-14" v-if="view === 'categories'">
+        <p v-if="categories.length === 0">Aucune catégories</p>
+        <table v-else class="items-center w-full bg-transparent border-collapse">
+          <thead>
+            <tr>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                Nom
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                description
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                Devise
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                priceTotal
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                payeur
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                valider
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ categories }}
+            <tr v-for="categorie in categories" :key="categorie._id">
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <input
+                  v-if="editAction"
+                  class="px-1 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-16"
+                  :value="categorie.name"
+                  @change="categorieFields.lastname = $event.target.value"
+                />
+                <span v-else>{{ categorie.name }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <input
+                  v-if="editAction"
+                  class="px-2 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-22"
+                  :value="categorie.description"
+                  @change="categorieFields.description = $event.target.value"
+                />
+                <span v-else>{{ categorie.description }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <input
+                  v-if="editAction"
+                  class="px-2 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-22"
+                  :value="categorie.motto"
+                  @change="categorieFields.motto = $event.target.value"
+                />
+                <span v-else>{{ categorie.motto }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <input
+                  v-if="editAction"
+                  class="px-2 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-22"
+                  :value="categorie.priceTotal"
+                  @change="categorieFields.priceTotal = $event.target.value"
+                />
+                <span v-else>{{ categorie.priceTotal }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <span>{{ categorie.payor }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <button @click="updatedCategorie(categorie)">
+                  <i class="fa-regular fa-circle-check" style="color: #0b8920; font-size: 20px"></i>
+                </button>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <div class="flex flex-wrap w-14 justify-between items-center">
+                  <div class="my-4">
+                    <button @click="editCategorie()">
+                      <i class="fa-solid fa-pen" style="color: #1685da; font-size: 18px"></i>
+                    </button>
+                  </div>
+                  <div class="my-4">
+                    <button @click="deleteCategorie(categorie)">
                       <i class="fa-solid fa-trash" style="color: #f00505; font-size: 18px"></i>
                     </button>
                   </div>

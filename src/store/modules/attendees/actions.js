@@ -10,11 +10,11 @@ export default {
         console.log('GET Attendees')
         console.log(response.data)
         context.commit('setAttendees', response.data.attendees)
-        context.commit('setMessages', response.data.msg)
+        context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
         if (error.response.data) {
-          context.commit('setErrorsForm', error.response.data)
+          context.commit('auth/setErrorsForm', error.response.data)
         }
       })
   },
@@ -23,11 +23,11 @@ export default {
       .post(`${BASE_URL}/attendees`, attendees)
       .then((response) => {
         context.commit('addNewAttendee', response.data.attendee)
-        context.commit('setMessages', response.data.msg)
+        context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
         if (error.response.data) {
-          context.commit('setErrorsForm', error.response.data)
+          context.commit('auth/setErrorsForm', error.response.data)
         }
       })
   },
@@ -44,12 +44,12 @@ export default {
         console.log('updated Attendee')
         console.log(response.data)
         context.commit('updatedAttendee', updatedAttendee)
-        context.commit('setMessages', response.data.msg)
+        context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
         console.log(error);
         if (error.response.data) {
-          context.commit('setErrorsForm', error.response.data)
+          context.commit('auth/setErrorsForm', error.response.data)
         }
       })
   },
@@ -60,11 +60,11 @@ export default {
       .then((response) => {
         console.log('delete Attendee')
         context.commit('deleteAttendee', deleteAttendee)
-        context.commit('setMessages', response.data.msg)
+        context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
         if (error.response.data) {
-          context.commit('setErrorsForm', error.response.data)
+          context.commit('auth/setErrorsForm', error.response.data)
         }
       })
   }

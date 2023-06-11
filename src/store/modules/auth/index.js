@@ -9,7 +9,7 @@ export default {
       userIsLogged: false,
       userIsAdmin: false,
       logger: null,
-      errorsForm: [],
+      errorsForm: null,
       messages: null,
       viewAdmin: 'users'
     }

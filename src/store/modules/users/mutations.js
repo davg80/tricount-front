@@ -4,21 +4,6 @@ export default {
     console.log(users)
     state.users = users
   },
-  setMessages(state, msg) {
-    console.log(msg);
-    state.messages = msg
-    setTimeout(() => {
-      state.messages = null
-    }, 3000)
-  },
-  setErrorsForm(state, error) {
-    console.log(error);
-    state.errorsForm = error
-    state.errors = true
-    setTimeout(() => {
-      state.errorsForm = []
-    }, 3000)
-  },
   updatedUser(state, updatedUser) {
     const oldUsers = state.users
     const indexUser = oldUsers.findIndex((user) => user._id === updatedUser._id)

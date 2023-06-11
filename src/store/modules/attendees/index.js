@@ -5,8 +5,6 @@ import getters from "./getters.js";
 export default {
   state() {
     return {
-      errorsForm: [],
-      messages: null, 
       attendees: [],
       count: 0
     }
