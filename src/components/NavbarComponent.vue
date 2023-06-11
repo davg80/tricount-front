@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { RouterLink, useRoute} from 'vue-router'
 import { useStore } from 'vuex'
+import AlertComponent from './AlertComponent.vue';
 const store = useStore()
 const route = useRoute()
 const showMenu = ref(false)
@@ -10,18 +11,10 @@ const toggleNavbar = () => {
 }
 const isAuthenticated = computed(() => store.getters['auth/getUserIsAuthenticated'])
 const isAdmin = computed(() => store.getters['auth/getUserIsAdmin'])
-const messages = computed(() => {
-  return store.getters["auth/getMessages"];
-});
-const errors = computed(() => {
-  return store.getters["auth/getErrors"];
-});
-
 const currentRoute = computed(() => route.name)
 
 const logout = () => {
   store.dispatch('auth/logout')
-  localStorage.clear()
 }
 </script>
 <template>
@@ -107,38 +100,14 @@ const logout = () => {
           </span>
           <li
             v-else
-            class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+            class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75 cursor-pointer"
+            @click="logout"
           >
-            <a href="/" @click="logout">Logout</a>
+          logout
           </li>
         </ul>
       </div>
     </div>
   </nav>
-  <div v-if="messages" class="absolute top-12 left-1/2 z-20 -translate-x-1/2 text-center">
-    <div
-      class="p-2 bg-green-200 items-center text-bg-green-200 leading-none lg:rounded-full flex lg:inline-flex"
-      role="alert"
-    >
-      <span
-        class="flex rounded-full bg-green-500 uppercase px-2 py-1 text-xs font-bold mr-3"
-        >Bravo</span
-      >
-      <span class="font-semibold mr-2 text-left flex-auto">{{ messages }}</span>
-    </div>
-  </div>
-  <div v-if="errors.msg" class="absolute top-12 left-1/2 z-20 -translate-x-1/2 text-center">
-    <div
-      class="p-2 bg-red-200 items-center text-bg-red-200 leading-none lg:rounded-full flex lg:inline-flex"
-      role="alert"
-    >
-      <span
-        class="flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs font-bold mr-3"
-        >Erreur</span
-      >
-      <span class="font-semibold mr-2 text-left flex-auto">{{
-        errors.msg
-      }}</span>
-    </div>
-  </div>
+  <AlertComponent />
 </template>

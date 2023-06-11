@@ -40,15 +40,20 @@ export default {
   logout(context) {
     console.log('logout')
     axios
-      .get(`${BASE_URL}/auth/logout`)
+      .delete(`${BASE_URL}/auth/logout`)
       .then((response) => {
         console.log(response)
+        console.log('logout')
         context.commit('setLogger', null)
+        context.commit('setIsAdmin', null)
         context.commit('setMessages', response.data.msg)
-        router.push({ name: 'Login' })
+        router.push({ name: 'Login' })  
       })
       .catch((error) => {
         console.log(error)
+        if (error.response.data) {
+          context.commit('setErrorsForm', error.response.data)
+        }
       })
   },
   newViewAdmin(context, newView) {

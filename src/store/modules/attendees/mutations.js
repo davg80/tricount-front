@@ -16,7 +16,7 @@ export default {
       state.errorsForm = error
       state.errors = true
       setTimeout(() => {
-        state.errorsForm = ''
+        state.errorsForm = []
       }, 3000)
     },
     addNewAttendee(state, newAttendee) {

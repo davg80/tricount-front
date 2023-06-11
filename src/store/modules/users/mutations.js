@@ -5,16 +5,18 @@ export default {
     state.users = users
   },
   setMessages(state, msg) {
+    console.log(msg);
     state.messages = msg
     setTimeout(() => {
-      state.messages = ''
+      state.messages = null
     }, 3000)
   },
   setErrorsForm(state, error) {
+    console.log(error);
     state.errorsForm = error
     state.errors = true
     setTimeout(() => {
-      state.errorsForm = ''
+      state.errorsForm = []
     }, 3000)
   },
   updatedUser(state, updatedUser) {

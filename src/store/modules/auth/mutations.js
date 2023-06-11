@@ -16,7 +16,7 @@ export default {
       setMessages(state, msg) {
         state.messages = msg
         setTimeout(() => {
-          state.messages = ''
+          state.messages = null
         }, 3000)
       },
       setIsAdmin(state, role) {

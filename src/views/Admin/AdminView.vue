@@ -1,5 +1,6 @@
 <script setup>
 import SidebarComponent from '../../components/SidebarComponent.vue'
+import AlertComponent from '../../components/AlertComponent.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 const store = useStore()
@@ -11,9 +12,7 @@ const editAction = ref(false)
 const userFields = ref({ firstname: null, lastname: null, email: null })
 const attendeeFields = ref({ firstname: null, lastname: null, status: null })
 
-const editUser = () => {
-  editAction.value = true
-}
+// ATTENDEES
 const editAttendee = () => {
   editAction.value = true
 }
@@ -22,7 +21,7 @@ const updatedAttende = (oldAttendee) => {
   console.log(attendeeFields)
   const attendee = {
     firstname: attendeeFields.value.firstname ?? oldAttendee.firstname,
-    lastname: attendeeFields.value.lastname?? oldAttendee.lastname,
+    lastname: attendeeFields.value.lastname ?? oldAttendee.lastname,
     status: (attendeeFields.value.status === 'true' ? true : false) ?? oldAttendee.status,
     _id: oldAttendee._id
   }
@@ -35,11 +34,16 @@ const deleteAttendee = (user) => {
   store.dispatch('deleteAttendee', user)
 }
 
+
+// USERS
+const editUser = () => {
+  editAction.value = true
+}
 const updatedUser = (oldUser) => {
   console.log(userFields)
   const user = {
     firstname: userFields.value.firstname ?? oldUser.firstname,
-    lastname: userFields.value.lastname?? oldUser.lastname,
+    lastname: userFields.value.lastname ?? oldUser.lastname,
     email: userFields.value.email ?? oldUser.email,
     _id: oldUser._id
   }
@@ -62,8 +66,10 @@ onMounted(() => {
 <template>
   <div>
     <SidebarComponent />
-    <div class="relative md:ml-64 bg-blueGray-100">
-      <section class="block w-full overflow-x-auto m-14"></section>
+    <AlertComponent />
+    <div class="relative md:ml-64 bg-blueGray-100 w-max">
+      <section class="block w-full overflow-x-auto m-14">
+      </section>
       <section
         class="block w-full overflow-x-auto m-14"
         v-if="view === 'users' || view === undefined"
