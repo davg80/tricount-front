@@ -12,6 +12,7 @@ export default {
         context.commit('setLogger', response.data.user)
         context.commit('setIsAdmin', response.data.user.role)
         context.commit('setMessages', response.data.msg)
+        localStorage.setItem('userId', response.data.user._id)
         router.push({ name: 'Home' })
       })
       .catch((error) => {
@@ -47,6 +48,7 @@ export default {
         context.commit('setLogger', null)
         context.commit('setIsAdmin', null)
         context.commit('setMessages', response.data.msg)
+        localStorage.clear()
         router.push({ name: 'Login' })  
       })
       .catch((error) => {

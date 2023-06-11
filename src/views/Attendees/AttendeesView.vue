@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+import AlertComponent from '../../components/AlertComponent.vue';
 import { useStore } from 'vuex'
 import InputComponent from '../../components/InputComponent.vue'
 
@@ -8,8 +9,6 @@ const store = useStore()
 const firstname = ref('')
 const lastname = ref('')
 const status = ref(false)
-const getLogger = computed(() => store.getters['auth/getLogger'])
-const userId = ref(getLogger.value._id)
 
 const assignFirstname = (value) => (firstname.value = value)
 const assignLastname = (value) => (lastname.value = value)
@@ -20,7 +19,7 @@ const handleSubmit = () => {
     firstname: firstname.value,
     lastname: lastname.value,
     status: status.value,
-    user: userId.value
+    user: localStorage.getItem('userId')
   })
 }
 </script>
@@ -28,6 +27,7 @@ const handleSubmit = () => {
 <template>
   <div>
     <main>
+      <AlertComponent />
       <section class="absolute w-full h-full">
         <div class="absolute top-0 w-full h-full bg-gray-900"></div>
         <div class="container mx-auto px-4 h-full">

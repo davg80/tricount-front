@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/Connect/LoginView.vue'
 import RegisterView from '../views/Connect/RegisterView.vue'
 import AttendeesView from '../views/Attendees/AttendeesView.vue'
-import SendingsView from '../views/Sendings/SendingsView.vue'
+import CategoriesView from '../views/Categories/CategoriesView.vue'
 import BalanceView from '../views/Balance/BalanceView.vue'
 import AdminView from '../views/Admin/AdminView.vue'
 import HomeView from '../views/HomeView.vue'
@@ -35,7 +35,7 @@ const router = createRouter({
     {
       path: '/sendings',
       name: 'Sendings',
-      component: SendingsView
+      component: CategoriesView
     },
     {
       path: '/balance',

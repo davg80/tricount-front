@@ -20,6 +20,14 @@ const errorsUser = computed(() => {
   return store.getters.getErrorsUser
 })
 console.log(errorsUser);
+const messagesAttendees = computed(() => {
+  return store.getters.getMessagesAttendees
+})
+console.log(messagesAttendees);
+const errorsAttendees = computed(() => {
+  return store.getters.getErrorsAttendees
+})
+console.log(errorsAttendees);
 </script>
 
 <template>
@@ -65,6 +73,28 @@ console.log(errorsUser);
         >Erreur</span
       >
       <span class="font-semibold mr-2 text-left flex-auto">{{ errorsUser.msg }}</span>
+    </div>
+  </div>
+  <div v-if="messagesAttendees" class="absolute left-1/2 -translate-x-1/2 top-12 z-20 text-center">
+    <div
+      class="p-2 bg-green-200 items-center text-bg-green-200 leading-none lg:rounded-full flex lg:inline-flex"
+      role="alert"
+    >
+      <span class="flex rounded-full bg-green-500 uppercase px-2 py-1 text-xs font-bold mr-3"
+        >Bravo</span
+      >
+      <span class="font-semibold mr-2 text-left flex-auto">{{ messagesAttendees }}</span>
+    </div>
+  </div>
+  <div v-if="errorsAttendees.length > 0" class="absolute left-1/2 -translate-x-1/2 top-12 z-20 text-center">
+    <div
+      class="p-2 bg-red-200 items-center text-bg-red-200 leading-none lg:rounded-full flex lg:inline-flex"
+      role="alert"
+    >
+      <span class="flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs font-bold mr-3"
+        >Erreur</span
+      >
+      <span class="font-semibold mr-2 text-left flex-auto">{{ errorsAttendees.msg }}</span>
     </div>
   </div>
 </template>

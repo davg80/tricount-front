@@ -1,5 +1,5 @@
 export default {
     getAttendees: (state) => state.attendees,
-    getErrors: (state) => state.errorsForm,
-    getMessages: (state) => state.messages,
+    getErrorsAttendees: (state) => state.errorsForm,
+    getMessagesAttendees: (state) => state.messages,
 }
