@@ -102,9 +102,9 @@ const changeView = (newView) => {
           <li class="items-center">
             <button
               class="text-pink-500 hover:text-pink-600 text-xs uppercase py-3 font-bold block"
-              @click="changeView('sendings')"
+              @click="changeView('transactions')"
             >
-              <i class="fas fa-money-bill opacity-75 mr-2 text-sm"></i> Dépenses
+              <i class="fas fa-money-bill opacity-75 mr-2 text-sm"></i> Transactions
             </button>
           </li>
         </ul>

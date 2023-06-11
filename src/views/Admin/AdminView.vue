@@ -8,6 +8,7 @@ const users = computed(() => store.getters.getUsers)
 const attendees = computed(() => store.getters.getAttendees)
 const categories = computed(() => store.getters.getCategories)
 const view = computed(() => store.getters['auth/getViewAdmin'])
+const payor = (idAttendee) => attendees.value.filter((attendee) => attendee._id === idAttendee)
 
 const editAction = ref(false)
 const userFields = ref({ firstname: null, lastname: null, email: null })
@@ -75,7 +76,9 @@ const updatedCategorie = (oldCategorie) => {
     description: categorieFields.value.description ?? oldCategorie.description,
     motto: categorieFields.value.motto ?? oldCategorie.motto,
     priceTotal: categorieFields.value.priceTotal ?? oldCategorie.priceTotal,
-    payor: categorieFields.value.payor ?? oldCategorie.payor,
+    atMyExpense: categorieFields.value.priceTotal/oldCategorie.count ?? oldCategorie.atMyExpense,
+    payor: oldCategorie.payor,
+    _id: oldCategorie._id
   }
   store.dispatch('updateCategorie', categorie)
   editAction.value = false
@@ -326,7 +329,12 @@ onMounted(() => {
               <th
                 class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
               >
-                priceTotal
+                prix total
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                A charge par personne
               </th>
               <th
                 class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
@@ -346,7 +354,6 @@ onMounted(() => {
             </tr>
           </thead>
           <tbody>
-            {{ categories }}
             <tr v-for="categorie in categories" :key="categorie._id">
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
@@ -390,12 +397,17 @@ onMounted(() => {
                   :value="categorie.priceTotal"
                   @change="categorieFields.priceTotal = $event.target.value"
                 />
-                <span v-else>{{ categorie.priceTotal }}</span>
+                <span v-else>{{ categorie.priceTotal }} {{ categorie.motto }}</span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
               >
-                <span>{{ categorie.payor }}</span>
+                <span>{{categorie.atMyExpense}} {{ categorie.motto }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <span>{{ payor(categorie.payor)[0].firstname }} {{ payor(categorie.payor)[0].lastname }}</span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"

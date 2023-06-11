@@ -17,8 +17,6 @@ console.log(errorsAuth);
 </script>
 
 <template>
-  <!-- <div v-if="messagesAuth !== null">{{ messagesAuth.msg }}</div>
-  <div v-if="errorsAuth !== null">{{ errorsAuth.msg }}</div> -->
   <div v-if="messagesAuth !== null" class="absolute left-1/2 -translate-x-1/2 top-12 z-20 text-center">
     <div
       class="p-2 bg-green-200 items-center text-bg-green-200 leading-none lg:rounded-full flex lg:inline-flex"

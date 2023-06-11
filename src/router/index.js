@@ -3,6 +3,7 @@ import LoginView from '../views/Connect/LoginView.vue'
 import RegisterView from '../views/Connect/RegisterView.vue'
 import AttendeesView from '../views/Attendees/AttendeesView.vue'
 import CategoriesView from '../views/Categories/CategoriesView.vue'
+import TransactionsView from '../views/Transactions/TransactionsView.vue'
 import BalanceView from '../views/Balance/BalanceView.vue'
 import AdminView from '../views/Admin/AdminView.vue'
 import HomeView from '../views/HomeView.vue'
@@ -33,9 +34,14 @@ const router = createRouter({
     }
     ,
     {
-      path: '/sendings',
-      name: 'Sendings',
+      path: '/categories',
+      name: 'Categories',
       component: CategoriesView
+    },
+    {
+      path: '/transactions',
+      name: 'Transactions',
+      component: TransactionsView
     },
     {
       path: '/balance',

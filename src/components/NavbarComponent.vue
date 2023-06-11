@@ -45,9 +45,17 @@ const logout = () => {
           <li class="nav-item">
             <RouterLink
               v-if="isAuthenticated"
-              :to="{ name: 'Sendings' }"
+              :to="{ name: 'Categories' }"
               class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-              >Dépenses</RouterLink
+              >Catégories</RouterLink
+            >
+          </li>
+          <li class="nav-item">
+            <RouterLink
+              v-if="isAuthenticated"
+              :to="{ name: 'Transactions' }"
+              class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+              >Transactions</RouterLink
             >
           </li>
           <li class="nav-item">

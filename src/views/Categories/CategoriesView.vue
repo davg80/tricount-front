@@ -16,6 +16,8 @@ const assignDescription = (value) => (description.value = value)
 const assignPriceTotal = (value) => (price.value = value)
 const attendees = computed(() => store.getters.getAttendees)
 
+const attendeesActifs = computed(() => attendees.value.filter((attendee) => attendee.status === true))
+
 const handleSubmit = () => {
   console.log(name.value, description.value, motto.value, price.value, payor.value)
   store.dispatch('createCategorie', {
@@ -52,16 +54,17 @@ onMounted(() => {
                 </div>
                 <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
                   <div class="text-white text-center mb-3 font-bold">
-                    <small>Créer une catégorie de dépense</small>
+                    <small v-if="attendeesActifs.length > 0">Créer une catégorie de dépense</small>
+                    <small v-else>Vous devez créer ou avoir des participants actifs.Pensez à vous créer.</small>
                   </div>
-                  <form @submit.prevent="handleSubmit">
+                  <form v-if="attendeesActifs.length > 0" @submit.prevent="handleSubmit">
                     <div class="relative w-full mb-3">
                       <InputComponent forLabel="name" label="Nom :" id="name" @input="assignName" />
                       <div class="flex my-4">
                         <label
                           for="participants"
                           class="text-xs font-semibold inline-block py-1 px-2 rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1 min-w-max"
-                          >Payeur :
+                          >Devise :
                         </label>
                         <select
                           v-model="motto"
@@ -91,7 +94,7 @@ onMounted(() => {
                         >
                           <option disabled value="">Choisir le payeur :</option>
                           <option
-                            v-for="attendee in attendees"
+                            v-for="attendee in attendeesActifs"
                             :key="attendee._id"
                             :value="attendee._id"
                           >
