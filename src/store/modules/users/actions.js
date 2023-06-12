@@ -9,7 +9,6 @@ export default {
         console.log('GET Users')
         console.log(response.data)
         context.commit('setUsers', response.data.user)
-        context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
         if (error.response.data) {

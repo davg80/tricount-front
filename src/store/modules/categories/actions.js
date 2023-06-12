@@ -10,7 +10,6 @@ export default {
         console.log('GET Categories')
         console.log(response.data)
         context.commit('setCategories', response.data.categories)
-        context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
         console.log(error);
@@ -25,7 +24,7 @@ export default {
       .post(`${BASE_URL}/categories`, categories)
       .then((response) => {
         console.log(categories);
-        context.commit('addNewCategorie', response.data.categorie)
+        context.commit('addNewCategorie', categories)
         context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {

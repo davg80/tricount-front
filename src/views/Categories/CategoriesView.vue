@@ -25,6 +25,7 @@ const handleSubmit = () => {
     description:description.value,
     motto: motto.value,
     priceTotal: parseInt(price.value),
+    atMyExpense: parseInt(parseInt(price.value)/attendeesActifs.value.length).toFixed(2),
     attendee: payor.value,
     user: localStorage.getItem('userId')
   })

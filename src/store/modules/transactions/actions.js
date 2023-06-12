@@ -10,7 +10,6 @@ export default {
         console.log('GET Transactions')
         console.log(response.data)
         context.commit('setTransactions', response.data.transactions)
-        context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
         console.log(error);
@@ -25,7 +24,7 @@ export default {
       .post(`${BASE_URL}/transactions`, transactions)
       .then((response) => {
         console.log(transactions);
-        context.commit('addNewTransaction', response.data.transaction)
+        context.commit('addNewTransaction', transactions)
         context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {

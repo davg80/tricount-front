@@ -9,7 +9,7 @@ const users = computed(() => store.getters.getUsers)
 const attendees = computed(() => store.getters.getAttendees)
 const categories = computed(() => store.getters.getCategories)
 const transactions = computed(() => store.getters.getTransactions)
-const getAttendeesActifs = computed(() => store.getters.getAttendeesActifs)
+const getAttendeesActifsByLogger = computed(() => store.getters.getCountAttendees)
 const view = computed(() => store.getters['auth/getViewAdmin'])
 const editAction = ref(false)
 const createAction = ref(false)
@@ -110,23 +110,20 @@ const editCategorie = () => {
 
 const updatedCategorie = (oldCategorie) => {
   console.log(oldCategorie)
-  console.log(categorieFields.value)
-  const countAttendees = getAttendeesActifs.value.filter(
-    (attendees) => attendees.user === localStorage.getItem('userId')
-  )
-  console.log(countAttendees.length + 1)
+  console.log(getAttendeesActifsByLogger.value)
   const categorie = {
     name: categorieFields.value.name ?? oldCategorie.name,
     description: categorieFields.value.description ?? oldCategorie.description,
     motto: categorieFields.value.motto ?? oldCategorie.motto,
     priceTotal: categorieFields.value.priceTotal ?? oldCategorie.priceTotal,
-    atMyExpense:
-      (parseInt(categorieFields.value.priceTotal) / (countAttendees.length + 1)).toFixed(2) ??
+    atMyExpense: parseInt(parseInt(categorieFields.value.priceTotal) / (getAttendeesActifsByLogger.value.length + 1).toFixed(2)) ??
       oldCategorie.atMyExpense,
-    attendee: oldCategorie.attendee,
+    attendee: oldCategorie.attendee._id,
     user: localStorage.getItem('userId'),
     _id: oldCategorie._id
   }
+  console.log('PB de VAleur NAN =====================>')
+  console.log(categorie)
   store.dispatch('updateCategorie', categorie)
   editAction.value = false
 }
@@ -148,11 +145,11 @@ const updatedTransaction = (oldTransaction) => {
     title: transactionFields.value.title ?? oldTransaction.title,
     typeTransaction: transactionFields.value.typeTransaction ?? oldTransaction.typeTransaction,
     price: transactionFields.value.price ?? oldTransaction.price,
-    attendee: transactionFields.value.attendee ?? oldTransaction.attendee,
+    attendee: transactionFields.value.attendee._id ?? oldTransaction.attendee,
     user: localStorage.getItem('userId'),
     category: transactionFields.value.category ?? oldTransaction.category._id,
     _id: oldTransaction._id
-  }
+  } 
   store.dispatch('updateTransaction', transaction)
   editAction.value = false
 }
@@ -294,6 +291,7 @@ onMounted(() => {
           </tbody>
         </table>
       </section>
+      <!-- CreateUser -->
       <section class="block w-full overflow-x-auto m-14" v-if="view === 'users' || view === undefined" >
         <form @submit.prevent="handleSubmit" v-if="createAction" class="w-full p-4">
             <div class="relative w-full mb-3">
