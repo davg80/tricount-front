@@ -9,11 +9,27 @@ export default {
         console.log('GET Users')
         console.log(response.data)
         context.commit('setUsers', response.data.user)
-        context.commit('setMessages', response.data.msg)
+        context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
         if (error.response.data) {
-          context.commit('setErrorsForm', error.response.data)
+          context.commit('auth/setErrorsForm', error.response.data)
+        }
+      })
+  },
+  createUser(context, user) {
+    console.log('create user')
+    console.log(user)
+    axios
+      .post(`${BASE_URL}/auth/register`, user)
+      .then((response) => {
+        console.log(response)
+        context.commit('addNewUser', response.data.user)
+        context.commit('auth/setMessages', response.data.msg)
+      })
+      .catch((error) => {
+        if (error.response.data) {
+          context.commit('auth/setErrorsForm', error.response.data)
         }
       })
   },
@@ -27,11 +43,11 @@ export default {
         console.log('Update Users')
         console.log(response.data)
         context.commit('updatedUser', updatedUser)
-        context.commit('setMessages', response.data.msg)
+        context.commit('auth/setMessages', response.data.msg)
       })  
       .catch((error) => {
         if (error.response.data) {
-          context.commit('setErrorsForm', error.response.data)
+          context.commit('auth/setErrorsForm', error.response.data)
         }
       })
   },
@@ -43,11 +59,11 @@ export default {
         console.log('delete Users')
         console.log(response.data)
         context.commit('deleteUser', deletedUser)
-        context.commit('setMessages', response.data.msg)
+        context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
         if (error.response.data) {
-          context.commit('setErrorsForm', error.response.data)
+          context.commit('auth/setErrorsForm', error.response.data)
         }
       })
   }

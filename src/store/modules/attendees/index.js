@@ -6,7 +6,8 @@ export default {
   state() {
     return {
       attendees: [],
-      count: 0
+      count: 0,
+      attendeesActifs: []
     }
   },
   getters,

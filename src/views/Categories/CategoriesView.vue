@@ -19,13 +19,13 @@ const attendees = computed(() => store.getters.getAttendees)
 const attendeesActifs = computed(() => attendees.value.filter((attendee) => attendee.status === true))
 
 const handleSubmit = () => {
-  console.log(name.value, description.value, motto.value, price.value, payor.value)
+  console.log(name.value, description.value, motto.value, price.value, payor.value, localStorage.getItem('userId'))
   store.dispatch('createCategorie', {
     name:name.value,
     description:description.value,
     motto: motto.value,
-    priceTotal: parseFloat(price.value),
-    payor: payor.value,
+    priceTotal: parseInt(price.value),
+    attendee: payor.value,
     user: localStorage.getItem('userId')
   })
 }

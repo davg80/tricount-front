@@ -1,29 +1,67 @@
 <script setup>
 import SidebarComponent from '../../components/SidebarComponent.vue'
 import AlertComponent from '../../components/AlertComponent.vue'
+import InputComponent from '../../components/InputComponent.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 const store = useStore()
 const users = computed(() => store.getters.getUsers)
 const attendees = computed(() => store.getters.getAttendees)
 const categories = computed(() => store.getters.getCategories)
+const transactions = computed(() => store.getters.getTransactions)
+const getAttendeesActifs = computed(() => store.getters.getAttendeesActifs)
 const view = computed(() => store.getters['auth/getViewAdmin'])
-const payor = (idAttendee) => attendees.value.filter((attendee) => attendee._id === idAttendee)
-
 const editAction = ref(false)
+const createAction = ref(false)
 const userFields = ref({ firstname: null, lastname: null, email: null })
 const attendeeFields = ref({ firstname: null, lastname: null, status: null })
 const categorieFields = ref({
   name: null,
   description: null,
   motto: null,
+  atMyExpense: null,
   priceTotal: null,
   payor: null
+})
+const transactionFields = ref({
+  title: null,
+  price: null,
+  typeTransaction: null,
+  attendee: null,
+  category: null,
+  user: null
 })
 
 // USERS
 const editUser = () => {
   editAction.value = true
+}
+const createUser = () => {
+  createAction.value = !createAction.value
+}
+const firstname = ref('')
+const lastname = ref('')
+const email = ref('')
+const password = ref('')
+const female = ref('')
+const male = ref('')
+
+const assignFirstname = (value) => (firstname.value = value)
+const assignLastname = (value) => (lastname.value = value)
+const assignEmail = (value) => (email.value = value)
+const assignPassword = (value) => (password.value = value)
+
+const handleSubmit = () => {
+  const gender = male.value ? 'male' : 'female'
+  console.log(firstname.value, lastname.value, email.value, password.value, gender)
+  store.dispatch('createUser', {
+    firstname: firstname.value,
+    lastname: lastname.value,
+    gender: gender,
+    email: email.value,
+    password: password.value
+  })
+  createAction.value = false
 }
 const updatedUser = (oldUser) => {
   console.log(userFields)
@@ -31,6 +69,7 @@ const updatedUser = (oldUser) => {
     firstname: userFields.value.firstname ?? oldUser.firstname,
     lastname: userFields.value.lastname ?? oldUser.lastname,
     email: userFields.value.email ?? oldUser.email,
+    role: oldUser.role,
     _id: oldUser._id
   }
   console.log(user)
@@ -71,13 +110,21 @@ const editCategorie = () => {
 
 const updatedCategorie = (oldCategorie) => {
   console.log(oldCategorie)
+  console.log(categorieFields.value)
+  const countAttendees = getAttendeesActifs.value.filter(
+    (attendees) => attendees.user === localStorage.getItem('userId')
+  )
+  console.log(countAttendees.length + 1)
   const categorie = {
     name: categorieFields.value.name ?? oldCategorie.name,
     description: categorieFields.value.description ?? oldCategorie.description,
     motto: categorieFields.value.motto ?? oldCategorie.motto,
     priceTotal: categorieFields.value.priceTotal ?? oldCategorie.priceTotal,
-    atMyExpense: categorieFields.value.priceTotal/oldCategorie.count ?? oldCategorie.atMyExpense,
-    payor: oldCategorie.payor,
+    atMyExpense:
+      (parseInt(categorieFields.value.priceTotal) / (countAttendees.length + 1)).toFixed(2) ??
+      oldCategorie.atMyExpense,
+    attendee: oldCategorie.attendee,
+    user: localStorage.getItem('userId'),
     _id: oldCategorie._id
   }
   store.dispatch('updateCategorie', categorie)
@@ -89,11 +136,38 @@ const deleteCategorie = (categorie) => {
   store.dispatch('deleteCategorie', categorie)
 }
 
+//TRANSACTIONS
+const editTransaction = () => {
+  editAction.value = true
+}
+
+const updatedTransaction = (oldTransaction) => {
+  console.log(oldTransaction)
+  console.log(transactionFields)
+  const transaction = {
+    title: transactionFields.value.title ?? oldTransaction.title,
+    typeTransaction: transactionFields.value.typeTransaction ?? oldTransaction.typeTransaction,
+    price: transactionFields.value.price ?? oldTransaction.price,
+    attendee: transactionFields.value.attendee ?? oldTransaction.attendee,
+    user: localStorage.getItem('userId'),
+    category: transactionFields.value.category ?? oldTransaction.category._id,
+    _id: oldTransaction._id
+  }
+  store.dispatch('updateTransaction', transaction)
+  editAction.value = false
+}
+
+const deleteTransaction = (transaction) => {
+  console.log(transaction)
+  store.dispatch('deleteTransaction', transaction)
+}
+
 onMounted(() => {
   store.dispatch('fetchUsers')
   store.dispatch('fetchAttendees')
   store.dispatch('auth/newViewAdmin')
   store.dispatch('fetchCategories')
+  store.dispatch('fetchTransactions')
 })
 </script>
 
@@ -107,7 +181,12 @@ onMounted(() => {
         class="block w-full overflow-x-auto m-14"
         v-if="view === 'users' || view === undefined"
       >
-        <p v-if="users.length === 0">Aucun utilisateurs avec le rôle user</p>
+        <div class="my-4" v-if="users.length === 0">
+          <p>Aucun utilisateurs avec le rôle user</p>
+          <button @click="createUser()">
+            <i class="fa-solid fa-circle-plus" style="color: #5d92ee"></i>
+          </button>
+        </div>
         <table v-else class="items-center w-full bg-transparent border-collapse">
           <thead>
             <tr>
@@ -195,6 +274,11 @@ onMounted(() => {
               >
                 <div class="flex flex-wrap w-14 justify-between items-center">
                   <div class="my-4">
+                    <button @click="createUser()">
+                      <i class="fa-solid fa-circle-plus" style="color: #5d92ee"></i>
+                    </button>
+                  </div>
+                  <div class="my-4">
                     <button @click="editUser()">
                       <i class="fa-solid fa-pen" style="color: #1685da; font-size: 18px"></i>
                     </button>
@@ -209,6 +293,80 @@ onMounted(() => {
             </tr>
           </tbody>
         </table>
+      </section>
+      <section class="block w-full overflow-x-auto m-14" v-if="view === 'users' || view === undefined" >
+        <form @submit.prevent="handleSubmit" v-if="createAction" class="w-full p-4">
+            <div class="relative w-full mb-3">
+              <InputComponent
+                forLabel="firstname"  
+                label="Nom :"
+                id="firstname"
+                @input="assignFirstname"
+              />
+            </div>
+            <div class="relative w-full mb-3">
+              <InputComponent
+                forLabel="lastname"
+                label="Prénom :"
+                id="lastname"
+                @input="assignLastname"
+              />
+            </div>
+            <div class="relative w-full mb-3">
+              <InputComponent
+                forLabel="email"
+                label="Adresse mail :"
+                typeInput="email"
+                id="email"
+                @input="assignEmail"
+              />
+            </div>
+            <div class="inline-flex items-center cursor-pointer mb-4">
+              <label
+                for="male"
+                class="text-xs font-semibold inline-block py-1 px-2 rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1 min-w-max"
+                >Homme :
+              </label>
+              <input
+                type="checkbox"
+                id="male"
+                v-model="male"
+                class="form-checkbox border-0 rounded text-gray-800 ml-1 w-5 h-5 mr-3"
+                style="transition: all 0.15s ease 0s"
+              />
+            </div>
+            <div class="inline-flex items-center cursor-pointer mb-4">
+              <label
+                for="female"
+                class="text-xs font-semibold inline-block py-1 px-2 rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1 min-w-max"
+                >Femme :
+              </label>
+              <input
+                type="checkbox"
+                id="female"
+                v-model="female"
+                class="form-checkbox border-0 rounded text-gray-800 ml-1 w-5 h-5"
+                style="transition: all 0.15s ease 0s"
+              />
+            </div>
+            <div class="relative w-full mb-3">
+              <InputComponent
+                forLabel="password"
+                label="Mot de passe :"
+                typeInput="password"
+                id="password"
+                @input="assignPassword"
+              />
+            </div>
+            <div class="text-center mt-6">
+              <button
+                type="submit"
+                class="bg-blue-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+              >
+                Créer un utilisateur
+              </button>
+            </div>
+          </form>
       </section>
       <!-- Attendees -->
       <section class="block w-full overflow-x-auto m-14" v-if="view === 'attendees'">
@@ -354,7 +512,7 @@ onMounted(() => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="categorie in categories" :key="categorie._id">
+            <tr v-for="(categorie, index) in categories" :key="index">
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
               >
@@ -402,12 +560,12 @@ onMounted(() => {
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
               >
-                <span>{{categorie.atMyExpense}} {{ categorie.motto }}</span>
+                <span>{{ categorie.atMyExpense }} {{ categorie.motto }}</span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
               >
-                <span>{{ payor(categorie.payor)[0].firstname }} {{ payor(categorie.payor)[0].lastname }}</span>
+                <span>{{ categorie.attendee.firstname }} {{ categorie.attendee.lastname }}</span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
@@ -427,6 +585,130 @@ onMounted(() => {
                   </div>
                   <div class="my-4">
                     <button @click="deleteCategorie(categorie)">
+                      <i class="fa-solid fa-trash" style="color: #f00505; font-size: 18px"></i>
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <!-- Transactions -->
+      <section class="block w-full overflow-x-auto m-14" v-if="view === 'transactions'">
+        <p v-if="transactions.length === 0">Aucune transaction</p>
+        <table v-else class="items-center w-full bg-transparent border-collapse">
+          <thead>
+            <tr>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                Titre
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                Prix
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                Type de transaction
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                Catégorie
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                Payeur
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                valider
+              </th>
+              <th
+                class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              >
+                actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="transaction in transactions" :key="transaction._id">
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <input
+                  v-if="editAction"
+                  class="px-1 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-16"
+                  :value="transaction.title"
+                  @change="transactionFields.title = $event.target.value"
+                />
+                <span v-else>{{ transaction.title }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <input
+                  v-if="editAction"
+                  class="px-1 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-16"
+                  :value="transaction.price"
+                  @change="transactionFields.price = $event.target.value"
+                />
+                <span v-else>{{ transaction.price }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <input
+                  v-if="editAction"
+                  class="px-1 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-22"
+                  :value="transaction.typeTransaction"
+                  @change="transactionFields.typeTransaction = $event.target.value"
+                />
+                <span v-else>{{ transaction.typeTransaction }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <select
+                  v-if="editAction"
+                  v-model="transactionFields.category"
+                  class="text-xs font-semibold inline-block py-1 px-2 rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1 min-w-max w-full"
+                >
+                  <option disabled value="">Choisir la categorie :</option>
+                  <option
+                    v-for="categorie in categories"
+                    :key="categorie._id"
+                    :value="categorie._id"
+                  >
+                    {{ categorie.name }}
+                  </option>
+                </select>
+                <span v-else>{{ transaction.category.name }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <button @click="updatedTransaction(transaction)">
+                  <i class="fa-regular fa-circle-check" style="color: #0b8920; font-size: 20px"></i>
+                </button>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <div class="flex flex-wrap w-14 justify-between items-center">
+                  <div class="my-4">
+                    <button @click="editTransaction()">
+                      <i class="fa-solid fa-pen" style="color: #1685da; font-size: 18px"></i>
+                    </button>
+                  </div>
+                  <div class="my-4">
+                    <button @click="deleteTransaction(transaction)">
                       <i class="fa-solid fa-trash" style="color: #f00505; font-size: 18px"></i>
                     </button>
                   </div>

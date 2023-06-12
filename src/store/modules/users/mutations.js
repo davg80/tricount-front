@@ -4,6 +4,9 @@ export default {
     console.log(users)
     state.users = users
   },
+  addNewUser(state, newUser) {
+    state.users.push(newUser)
+  },
   updatedUser(state, updatedUser) {
     const oldUsers = state.users
     const indexUser = oldUsers.findIndex((user) => user._id === updatedUser._id)

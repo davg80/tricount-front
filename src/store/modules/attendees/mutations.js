@@ -6,6 +6,9 @@ export default {
     setCount(state, count) {
       state.count = count
     },
+    setAttendeesActifs(state, attendeesActifs) {
+      state.attendeesActifs = attendeesActifs
+    },
     addNewAttendee(state, newAttendee) {
       state.attendees.push(newAttendee)
     },

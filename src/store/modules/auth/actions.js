@@ -12,7 +12,9 @@ export default {
         context.commit('setLogger', response.data.user)
         context.commit('setIsAdmin', response.data.user.role)
         context.commit('setMessages', response.data.msg)
-        localStorage.setItem('userId', response.data.user._id)
+        if(!localStorage.getItem('userId')) {
+          localStorage.setItem('userId', response.data.user._id)
+        }
         router.push({ name: 'Home' })
       })
       .catch((error) => {
@@ -29,8 +31,10 @@ export default {
       .then((response) => {
         console.log(response)
         context.commit('setLogger', response.data.user)
+        context.commit('setIsAdmin', response.data.user.role)
         context.commit('setMessages', response.data.msg)
-        router.push({ name: 'Login' })
+        localStorage.setItem('userId', response.data.user._id)
+        router.push({ name: 'Home' })
       })
       .catch((error) => {
         if (error.response.data) {

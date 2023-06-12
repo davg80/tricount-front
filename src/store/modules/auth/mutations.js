@@ -8,9 +8,7 @@ export default {
       setLogger(state, logger) {
         console.log(logger);
         state.logger = logger
-        if (state.logger !== null) {
-          state.userIsLogged = true
-        }
+        state.userIsLogged = (state.logger !== null) ? true : false
       },
       setMessages(state, msg) {
         state.messages = msg

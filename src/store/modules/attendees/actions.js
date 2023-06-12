@@ -8,9 +8,12 @@ export default {
       .get(`${BASE_URL}/attendees`)
       .then((response) => {
         console.log('GET Attendees')
-        console.log(response.data)
+        const attendees = response.data.attendees
+        const AttendeesActifs = (attendees.length > 0) ? attendees.filter((attendee) => attendee.status === true) : attendees
         context.commit('setAttendees', response.data.attendees)
         context.commit('auth/setMessages', response.data.msg)
+        context.commit('setCount', response.data.attendees.length)
+        context.commit('setAttendeesActifs', AttendeesActifs)
       })
       .catch((error) => {
         if (error.response.data) {
