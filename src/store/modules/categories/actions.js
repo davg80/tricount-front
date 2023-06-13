@@ -1,5 +1,6 @@
 const BASE_URL = 'http://localhost:3333/api/v1'
 import axios from 'axios'
+import router from '../../../router'
 
 export default {
   fetchCategories(context) {
@@ -25,7 +26,10 @@ export default {
       .then((response) => {
         console.log(categories)
         context.commit('addNewCategorie', categories)
+        context.commit('setTotalPriceCategories', response.data.categories)
+        context.commit('setTotalAtMyExpenseCategories', response.data.categories)
         context.commit('auth/setMessages', response.data.msg)
+        router.push({name: 'Transactions'})
       })
       .catch((error) => {
         console.log(error)
@@ -42,6 +46,8 @@ export default {
         console.log('updated Categorie')
         console.log(response.data)
         context.commit('updatedCategorie', response.data.categories)
+        context.commit('setTotalPriceCategories', response.data.categories)
+        context.commit('setTotalAtMyExpenseCategories', response.data.categories)
         context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {

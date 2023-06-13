@@ -8,6 +8,7 @@ import BalanceView from '../views/Balance/BalanceView.vue'
 import AdminView from '../views/Admin/AdminView.vue'
 import HomeView from '../views/HomeView.vue'
 import ProfileView from '../views/ProfileView.vue'
+import SendingView from '../views/Sending/SendingView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +58,11 @@ const router = createRouter({
       path: '/profile',
       name: 'Profile',
       component: ProfileView
+    },
+    {
+      path: '/sending',
+      name: 'Sending',
+      component: SendingView
     }
   ]
 })

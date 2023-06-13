@@ -29,6 +29,7 @@ const handleSubmit = () => {
     attendee: payor.value,
     user: localStorage.getItem('userId')
   })
+  
 }
 
 onMounted(() => {

@@ -10,6 +10,8 @@ const attendees = computed(() => store.getters.getAttendees)
 const categories = computed(() => store.getters.getCategories)
 const transactions = computed(() => store.getters.getTransactions)
 const getAttendeesActifsByLogger = computed(() => store.getters.getCountAttendees)
+const totalPriceCategories = computed(() => store.getters.getTotalPriceCategories)
+const totalAtMyExpenseCategories = computed(() => store.getters.getTotalAtMyExpenseCategories)
 const view = computed(() => store.getters['auth/getViewAdmin'])
 const editAction = ref(false)
 const createAction = ref(false)
@@ -116,8 +118,6 @@ const updatedCategorie = (oldCategorie) => {
     description: categorieFields.value.description ?? oldCategorie.description,
     motto: categorieFields.value.motto ?? oldCategorie.motto,
     priceTotal: categorieFields.value.priceTotal ?? oldCategorie.priceTotal,
-    atMyExpense: parseInt(parseInt(categorieFields.value.priceTotal) / (getAttendeesActifsByLogger.value.length + 1).toFixed(2)) ??
-      oldCategorie.atMyExpense,
     attendee: oldCategorie.attendee._id,
     user: localStorage.getItem('userId'),
     _id: oldCategorie._id
@@ -589,6 +589,13 @@ onMounted(() => {
                 </div>
               </td>
             </tr>
+            <tr>
+            <td></td>
+            <td></td>
+            <td class="text-xs">Total</td>
+            <td class="pl-4">{{totalPriceCategories}} €</td>
+            <td class="pl-4">{{ totalAtMyExpenseCategories }} €</td>
+          </tr>
           </tbody>
         </table>
       </section>
@@ -687,7 +694,8 @@ onMounted(() => {
                     {{ categorie.name }}
                   </option>
                 </select>
-                <span v-else>{{ transaction.category.name }}</span>
+                
+                <span v-else>{{ transaction.category['name'] }}</span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"

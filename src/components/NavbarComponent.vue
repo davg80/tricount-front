@@ -61,6 +61,14 @@ const logout = () => {
           <li class="nav-item">
             <RouterLink
               v-if="isAuthenticated"
+              :to="{ name: 'Sending' }"
+              class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+              >Bilan des dépenses</RouterLink
+            >
+          </li>
+          <li class="nav-item">
+            <RouterLink
+              v-if="isAuthenticated"
               :to="{ name: 'Balance' }"
               class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
               >Balance</RouterLink

@@ -5,7 +5,9 @@ import getters from "./getters.js";
 export default {
   state() {
     return {
-      categories: []
+      categories: [],
+      totalPriceCategories: 0,
+      totalAtMyExpenseCategories: 0
     }
   },
   getters,
