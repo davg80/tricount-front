@@ -12,23 +12,23 @@ export default {
         context.commit('setCategories', response.data.categories)
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error)
         if (error) {
           context.commit('auth/setErrorsForm', error.response.data)
         }
       })
   },
   createCategorie(context, categories) {
-    console.log(categories);
+    console.log(categories)
     axios
       .post(`${BASE_URL}/categories`, categories)
       .then((response) => {
-        console.log(categories);
+        console.log(categories)
         context.commit('addNewCategorie', categories)
         context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error)
         if (error) {
           context.commit('auth/setErrorsForm', error.response.data)
         }
@@ -36,21 +36,16 @@ export default {
   },
   updateCategorie(context, updatedCategorie) {
     console.log(updatedCategorie)
-    const categorie = context.state.categories.find(
-      (categorie) => categorie._id === updatedCategorie._id
-    )
-    console.log(categorie)
-
     axios
       .patch(`${BASE_URL}/categories/${updatedCategorie._id}`, updatedCategorie)
       .then((response) => {
         console.log('updated Categorie')
         console.log(response.data)
-        context.commit('updatedCategorie', updatedCategorie)
+        context.commit('updatedCategorie', response.data.categories)
         context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error)
         if (error) {
           context.commit('auth/setErrorsForm', error.response.data)
         }
@@ -66,7 +61,7 @@ export default {
         context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error)
         if (error) {
           context.commit('auth/setErrorsForm', error.response.data)
         }

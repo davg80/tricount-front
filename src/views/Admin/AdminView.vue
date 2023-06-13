@@ -122,8 +122,6 @@ const updatedCategorie = (oldCategorie) => {
     user: localStorage.getItem('userId'),
     _id: oldCategorie._id
   }
-  console.log('PB de VAleur NAN =====================>')
-  console.log(categorie)
   store.dispatch('updateCategorie', categorie)
   editAction.value = false
 }
@@ -145,11 +143,12 @@ const updatedTransaction = (oldTransaction) => {
     title: transactionFields.value.title ?? oldTransaction.title,
     typeTransaction: transactionFields.value.typeTransaction ?? oldTransaction.typeTransaction,
     price: transactionFields.value.price ?? oldTransaction.price,
-    attendee: transactionFields.value.attendee._id ?? oldTransaction.attendee,
+    attendee: transactionFields.value.attendee ?? oldTransaction.attendee,
     user: localStorage.getItem('userId'),
     category: transactionFields.value.category ?? oldTransaction.category._id,
     _id: oldTransaction._id
   } 
+  console.log(transaction);
   store.dispatch('updateTransaction', transaction)
   editAction.value = false
 }
@@ -568,9 +567,10 @@ onMounted(() => {
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
               >
-                <button @click="updatedCategorie(categorie)">
+                <button @click="updatedCategorie(categorie)" v-if="editAction">
                   <i class="fa-regular fa-circle-check" style="color: #0b8920; font-size: 20px"></i>
                 </button>
+                <span v-else><i class="fa-regular fa-circle-check" style="color: #7e7c7c; font-size: 20px"></i></span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
@@ -692,9 +692,15 @@ onMounted(() => {
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
               >
-                <button @click="updatedTransaction(transaction)">
+                <span>{{ transaction.attendee.firstname }} {{ transaction.attendee.lastname }}</span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
+              >
+                <button @click="updatedTransaction(transaction)" v-if="editAction">
                   <i class="fa-regular fa-circle-check" style="color: #0b8920; font-size: 20px"></i>
                 </button>
+                <span v-else><i class="fa-regular fa-circle-check" style="color: #7e7c7c; font-size: 20px"></i></span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
