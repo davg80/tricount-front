@@ -26,8 +26,8 @@ export default {
       .then((response) => {
         console.log(categories)
         context.commit('addNewCategorie', categories)
-        context.commit('setTotalPriceCategories', response.data.categories)
-        context.commit('setTotalAtMyExpenseCategories', response.data.categories)
+        context.commit('setTotalPriceCategories')
+        context.commit('setTotalAtMyExpenseCategories')
         context.commit('auth/setMessages', response.data.msg)
         router.push({name: 'Transactions'})
       })
@@ -46,8 +46,8 @@ export default {
         console.log('updated Categorie')
         console.log(response.data)
         context.commit('updatedCategorie', response.data.categories)
-        context.commit('setTotalPriceCategories', response.data.categories)
-        context.commit('setTotalAtMyExpenseCategories', response.data.categories)
+        context.commit('setTotalPriceCategories')
+        context.commit('setTotalAtMyExpenseCategories')
         context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {

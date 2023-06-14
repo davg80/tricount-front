@@ -4,7 +4,6 @@ import { useStore } from 'vuex'
 const store = useStore()
 const categories = computed(() => store.getters.getCategories)
 const editAction = ref(false)
-const getAttendeesActifsByLogger = computed(() => store.getters.getCountAttendees)
 const totalPriceCategories = computed(() => store.getters.getTotalPriceCategories)
 const totalAtMyExpenseCategories = computed(() => store.getters.getTotalAtMyExpenseCategories)
 const categorieFields = ref({
@@ -22,7 +21,6 @@ const editCategorie = () => {
 
 const updatedCategorie = (oldCategorie) => {
   console.log(oldCategorie)
-  console.log(getAttendeesActifsByLogger.value)
   const categorie = {
     name: categorieFields.value.name ?? oldCategorie.name,
     description: categorieFields.value.description ?? oldCategorie.description,

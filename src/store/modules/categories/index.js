@@ -7,7 +7,7 @@ export default {
     return {
       categories: [],
       totalPriceCategories: 0,
-      totalAtMyExpenseCategories: 0
+      totalAtMyExpenseCategories: 0,
     }
   },
   getters,

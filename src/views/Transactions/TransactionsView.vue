@@ -57,12 +57,12 @@ onMounted(() => {
                 </div>
                 <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
                   <div class="text-white text-center mb-3 font-bold">
-                    <small v-if="attendeesActifs.length > 0">Créer une transaction</small>
+                    <small v-if="attendeesActifs.length > 0 && categories.length > 0">Créer une transaction</small>
                     <small v-else
-                      >Vous devez créer ou avoir des participants actifs.Pensez à vous créer.</small
+                      >Vous devez créer ou avoir des participants actifs, et avoir au moins 1 catégorie.</small
                     >
                   </div>
-                  <form v-if="attendeesActifs.length > 0" @submit.prevent="handleSubmit">
+                  <form v-if="attendeesActifs.length > 0 && categories.length > 0" @submit.prevent="handleSubmit">
                     <div class="relative w-full mb-3">
                       <InputComponent
                         forLabel="title"
@@ -114,7 +114,7 @@ onMounted(() => {
                           :key="attendee._id"
                           :value="attendee._id"
                         >
-                          {{ attendee.firstname }}
+                          {{ attendee.lastname }}
                         </option>
                       </select>
                     </div>

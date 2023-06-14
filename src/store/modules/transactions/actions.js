@@ -40,18 +40,16 @@ export default {
       (transaction) => transaction._id === updatedTransaction._id
     )
     console.log(transaction)
-
     axios
       .patch(`${BASE_URL}/transactions/${updatedTransaction._id}`, updatedTransaction)
       .then((response) => {
         console.log('updated Transaction')
         console.log(response.data)
-        context.commit('updatedTransaction', updatedTransaction)
+        context.commit('updatedTransaction', response.data.transactions)
         context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
-        console.log(error);
-        if (error) {
+        if (error.response) {
           context.commit('auth/setErrorsForm', error.response.data)
         }
       })

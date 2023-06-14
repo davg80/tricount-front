@@ -9,7 +9,6 @@ const users = computed(() => store.getters.getUsers)
 const attendees = computed(() => store.getters.getAttendees)
 const categories = computed(() => store.getters.getCategories)
 const transactions = computed(() => store.getters.getTransactions)
-const getAttendeesActifsByLogger = computed(() => store.getters.getCountAttendees)
 const totalPriceCategories = computed(() => store.getters.getTotalPriceCategories)
 const totalAtMyExpenseCategories = computed(() => store.getters.getTotalAtMyExpenseCategories)
 const view = computed(() => store.getters['auth/getViewAdmin'])
@@ -112,7 +111,6 @@ const editCategorie = () => {
 
 const updatedCategorie = (oldCategorie) => {
   console.log(oldCategorie)
-  console.log(getAttendeesActifsByLogger.value)
   const categorie = {
     name: categorieFields.value.name ?? oldCategorie.name,
     description: categorieFields.value.description ?? oldCategorie.description,
@@ -406,10 +404,10 @@ onMounted(() => {
                 <input
                   v-if="editAction"
                   class="px-1 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-16"
-                  :value="attendee.lastname"
-                  @change="attendeeFields.lastname = $event.target.value"
+                  :value="attendee.firstname"
+                  @change="attendeeFields.firstname = $event.target.value"
                 />
-                <span v-else>{{ attendee.lastname }}</span>
+                <span v-else>{{ attendee.firstname }}</span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
@@ -417,10 +415,10 @@ onMounted(() => {
                 <input
                   v-if="editAction"
                   class="px-2 py-1 placeholder-slate-300 text-slate-600 relative bg-white rounded text-sm border border-slate-300 outline-none focus:outline-none focus:ring w-22"
-                  :value="attendee.firstname"
-                  @change="attendeeFields.firstname = $event.target.value"
+                  :value="attendee.lastname"
+                  @change="attendeeFields.lastname = $event.target.value"
                 />
-                <span v-else>{{ attendee.firstname }}</span>
+                <span v-else>{{ attendee.lastname }}</span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"
@@ -694,8 +692,7 @@ onMounted(() => {
                     {{ categorie.name }}
                   </option>
                 </select>
-                
-                <span v-else>{{ transaction.category['name'] }}</span>
+                <span>{{ transaction.category.name }}</span>
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"

@@ -46,18 +46,18 @@ const handleSubmit = () => {
                   <form @submit.prevent="handleSubmit">
                     <div class="relative w-full mb-3">
                       <InputComponent
-                        forLabel="firstname"
-                        label="Nom :"
-                        id="firstname"
-                        @input="assignFirstname"
+                      forLabel="lastname"
+                      label="Nom :"
+                      id="lastname"
+                      @input="assignLastname"
                       />
                     </div>
                     <div class="relative w-full mb-3">
                       <InputComponent
-                        forLabel="lastname"
+                        forLabel="firstname"
                         label="Prénom :"
-                        id="lastname"
-                        @input="assignLastname"
+                        id="firstname"
+                        @input="assignFirstname"
                       />
                     </div>
                     <div class="inline-flex items-center cursor-pointer mb-4">
