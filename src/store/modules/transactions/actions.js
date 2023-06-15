@@ -35,17 +35,15 @@ export default {
       })
   },
   updateTransaction(context, updatedTransaction) {
+    console.log('UPDATE =====> ')
     console.log(updatedTransaction)
-    const transaction = context.state.transactions.find(
-      (transaction) => transaction._id === updatedTransaction._id
-    )
-    console.log(transaction)
+  
     axios
       .patch(`${BASE_URL}/transactions/${updatedTransaction._id}`, updatedTransaction)
       .then((response) => {
         console.log('updated Transaction')
         console.log(response.data)
-        context.commit('updatedTransaction', response.data.transactions)
+        context.commit('updatedTransaction', response.data.transaction)
         context.commit('auth/setMessages', response.data.msg)
       })
       .catch((error) => {
