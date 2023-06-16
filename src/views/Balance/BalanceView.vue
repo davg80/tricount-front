@@ -8,27 +8,31 @@ const transactions = computed(() => store.getters.getTransactions)
 const categories = computed(() => store.getters.getCategories)
 const totalPriceCategories = computed(() => store.getters.getTotalPriceCategories)
 const totalAtMyExpenseCategories = computed(() => store.getters.getTotalAtMyExpenseCategories)
-const data = categories.value.reduce(function (r, a) {
-  r[a._id] = r[a._id] || []
-  r[a._id].push({
-    attendeeId: a.attendee._id,
-    firstname: a.attendee.firstname,
-    lastname: a.attendee.lastname,
-    priceTotal: a.priceTotal,
-    atMyExpense: a.atMyExpense,
-    name: a.name,
-    description: a.description,
-    motto: a.motto,
-    transactions: transactions.value.filter((el) => el.category._id === a._id),
-    sumAlreadyPayed: transactions.value
-      .filter((el) => el.category._id === a._id)
-      .reduce((acc, curr) => {
-        return acc + curr.price
-      }, 0),
-    attendees: attendees
-  })
-  return r
-}, Object.create(null))
+
+function getData() {
+  const data = categories.value.reduce(function (r, a) {
+    r[a._id] = r[a._id] || []
+    r[a._id].push({
+      attendeeId: a.attendee._id,
+      firstname: a.attendee.firstname,
+      lastname: a.attendee.lastname,
+      priceTotal: a.priceTotal,
+      atMyExpense: a.atMyExpense,
+      name: a.name,
+      description: a.description,
+      motto: a.motto,
+      transactions: transactions.value.filter((el) => el.category._id === a._id),
+      sumAlreadyPayed: transactions.value
+        .filter((el) => el.category._id === a._id)
+        .reduce((acc, curr) => {
+          return acc + curr.price
+        }, 0),
+      attendees: attendees
+    })
+    return r
+  }, Object.create(null))
+  return data
+}
 
 // // Utils
 function capitalizeFirstLetter(string) {
@@ -39,6 +43,7 @@ onMounted(() => {
   store.dispatch('fetchCategories')
   store.dispatch('fetchAttendees')
   store.dispatch('fetchTransactions')
+  getData()
 })
 </script>
 <template>
@@ -52,7 +57,7 @@ onMounted(() => {
               {{ totalAtMyExpenseCategories }} €
             </p>
             <ul>
-              <li v-for="categories in data" :key="categories">
+              <li v-for="categories in getData()" :key="categories">
                 <ul>
                   <li v-for="(category, index) in categories" :key="index">
                     <div
@@ -72,14 +77,18 @@ onMounted(() => {
                         >
                           <p class="font-bold mb-4" v-if="transaction">
                             {{ transaction.typeTransaction }} :
-                            <span class="italic underline">{{ transaction.title }}</span></p>
-                            <span class="pb-3"
-                              >{{ transaction.attendee.lastname }}
-                              {{ transaction.attendee.firstname }} a payé {{ transaction.price }}
-                              {{ category.motto }}.</span>
-                              <p>Il reste
-                              {{ transaction.category.priceTotal - category.sumAlreadyPayed }}
-                              {{ category.motto }}</p>
+                            <span class="italic underline">{{ transaction.title }}</span>
+                          </p>
+                          <span class="pb-3"
+                            >{{ transaction.attendee.lastname }}
+                            {{ transaction.attendee.firstname }} a payé {{ transaction.price }}
+                            {{ category.motto }}.</span
+                          >
+                          <p>
+                            Il reste
+                            {{ transaction.category.priceTotal - category.sumAlreadyPayed }}
+                            {{ category.motto }}
+                          </p>
                         </li>
                       </ul>
                     </div>
